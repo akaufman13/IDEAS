@@ -1,0 +1,19 @@
+macros to add to investigation workbook
+
+1. when directed to invcestigation grid, last empty row to enter new case info
+	clear all filters before bringing to new row (DONE)
+	freeze top pane (DONE)
+	unhide all columns (DONE)
+	Clear all filters before finding if case is in grid and going to grid (DONE)
+	
+	put the casenumber entered into the input box in column I:I
+	msgbox asking how many rows
+	msgbox asking which color
+Number found- do you want to view or edit? if view, hide columns macro if edit, unhide columns or atleast just make it so they are unhidden at least
+
+2. Search for cases with comments or cases with pending CAPS
+3. Search for cases requiring betsy attention
+4. Add word direction links to a sheet instead of having the text boxes
+5. Reminders of column instructions when clicking on column header
+6. When grid is closed, exit out of excel, clear all filters
+
