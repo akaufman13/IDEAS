@@ -1,0 +1,232 @@
+1. when directed to invcestigation grid, last empty row to enter new case info (DONE)
+2. clear all filters (DONE)
+3.freeze top pane (DONE)
+4. unhide all columns (DONE)
+5. hide columns filter needs to go back to the last active cell (DONE)
+6. case number entered in inputbox for edit/new gets put into grid corrections/newly added needs review (DONE)
+7. adding new case automatically enters first row formulas (DONE)
+8.put the casenumber entered into the input box in column I:I (DONE)
+9.entering new case: msgbox asking how many rows,inserting rows and additional rows formulas (DONE)
+10. Time and date of case number add on corrections grid (DONE)
+11.When opening workbook, go right to the Getting Started sheet (DONE)
+ 
+
+
+new rows also selecting the right color pattern and formatting or seperate each bordered section by a different shade
+
+Search for cases with comments or cases with pending CAPS
+
+FID NUMBER additional row fill from above
+
+When fill additional rows, block off the cells that should not be filled
+
+additional rows: fill pattern for cells that should not be filled in or LOCK /protect the cells in range A:V and AG:AS and AU:AV
+
+If cell is <> Null or If cell is <> "" Then fill fill first row and fill additional rows
+
+Protect to not allow Sort in columns
+
+Have to fix drop down in column A if the protect macro is going to work 
+
+Private Sub Worksheet_Change(ByVal Target As Range)
+    Dim N As Long
+    N = Target.Row
+    If Intersect(Target, Range("A:A")) <> "" And Target.Text <> "CLOSED" Then Cells.Locked = True  'if A has closed in it protect
+    If Intersect(Target, Range("A:A")) Is Nothing And Intersect(Target, Range("A:A")).Offset(1, 1) <> "" Then Cells.Locked = True
+    'Else: Cells.Locked = False
+   ActiveSheet.Unprotect
+      Range("A" & N & ":AV" & N).Locked = True
+    ActiveSheet.Protect
+
+End Sub
+
+
+
+
+using AND
+If Lcase(Cells(i, "A").Value) = "miami" And _
+
+    Lcase(Cells(i, "D").Value) = "florida" Then
+
+  Cells(i, "C").Value = "BA"
+
+Private Sub Worksheet_Change(ByVal Target As Range)
+    Dim N As Long
+    N = Target.Row
+    If Intersect(Target, Range("A:A")) <> "" Then Exit Sub 'If A has something in it then dont protect
+    If Target.Text <> "CLOSED" Then Cells.Locked = True  'if A has closed in it protect
+    If Intersect(Target, Range("A:A")) Is Nothing Then Cells.Locked = True
+   ActiveSheet.Unprotect
+      Range("A" & N & ":AV" & N).Locked = True
+    ActiveSheet.Protect
+
+End Sub
+
+
+
+
+Sub ProtectTheSheet()
+Dim chCell As Range
+Dim chRng As Range
+
+'Clear the default status
+ActiveSheet.Unprotect
+Range("A7:I35").Locked = False
+
+Set chRng = ActiveSheet.Range("A7:I35")
+
+'Check cell value in body and lock cells with content
+For Each chCell In chRng.Cells
+    If chCell.Value <> "" Then Cells.Locked = True
+Next chCell
+
+ActiveSheet.Protect
+
+End Sub
+
+
+Sub CellLocker()
+Cells.Select
+' unlock all the cells
+Selection.Locked = false
+' next, select the cells (or range) that you want to make read only, 
+' here I used simply A1
+Range("A1").Select
+' lock those cells
+Selection.Locked = true
+' now we need to protect the sheet to restrict access to the cells. 
+' I protected only the contents you can add whatever you want
+ActiveSheet.Protect DrawingObjects:=false, Contents:=true, Scenarios:=false
+End Sub
+If you say Range("A1").Select, then it locks only A1. You can specify multiple cells to be locked by specifying as follows:
+ A3:A12,D3:E12,J1:R13,W18
+ This locks A3 to A12 and D3 to E12 etc.
+
+
+
+
+
+
+
+
+
+http://www.rondebruin.nl/win/s9/win006.htm  for the base of the code i used for the inputbox
+
+
+Copy cells to another sheet with Find (could use this for moving rows into the substantiated.indicated sheet)
+
+The example below will copy all cells with a E-Mail Address in the range Sheets("Sheet1").Range("A1:E100") to a new worksheet in your workbook. Note: I use xlPart in the code instead of xlWhole to find each cell with a @ character.
+Sub Copy_To_Another_Sheet_1()
+    Dim FirstAddress As String
+    Dim MyArr As Variant
+    Dim Rng As Range
+    Dim Rcount As Long
+    Dim I As Long
+    Dim NewSh As Worksheet
+
+    With Application
+        .ScreenUpdating = False
+        .EnableEvents = False
+    End With
+
+    'Fill in the search Value
+    MyArr = Array("@")
+
+    'You can also use more values in the Array
+    'myArr = Array("@", "www")
+
+    'Add new worksheet to your workbook to copy to
+    'You can also use a existing sheet like this
+    'Set NewSh = Sheets("Sheet2")
+    Set NewSh = Worksheets.Add
+
+    With Sheets("Sheet1").Range("A1:Z100")
+
+        Rcount = 0
+
+        For I = LBound(MyArr) To UBound(MyArr)
+
+            'If you use LookIn:=xlValues it will also work with a
+            'formula cell that evaluates to "@"
+            'Note : I use xlPart in this example and not xlWhole
+            Set Rng = .Find(What:=MyArr(I), _
+                            After:=.Cells(.Cells.Count), _
+                            LookIn:=xlFormulas, _
+                            LookAt:=xlPart, _
+                            SearchOrder:=xlByRows, _
+                            SearchDirection:=xlNext, _
+                            MatchCase:=False)
+            If Not Rng Is Nothing Then
+                FirstAddress = Rng.Address
+                Do
+                    Rcount = Rcount + 1
+
+                    Rng.Copy NewSh.Range("A" & Rcount)
+
+                    ' Use this if you only want to copy the value
+                    ' NewSh.Range("A" & Rcount).Value = Rng.Value
+
+                    Set Rng = .FindNext(Rng)
+                Loop While Not Rng Is Nothing And Rng.Address <> FirstAddress
+            End If
+        Next I
+    End With
+
+    With Application
+        .ScreenUpdating = True
+        .EnableEvents = True
+    End With
+End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+Loops for survey responses
+
+Dim i As Integer
+ i = 1
+
+Do While i < 6
+     Cells(i, 1).Value = 20
+     i = i + 1
+Loop
+
+
+
+
+First we need to find first blank row in column and then select the cell. 
+
+Sub sb1_IFCondition()
+
+'ActiveCell.Select
+If Range("H2") < 45 Then Range("I2") = "Yes"
+
+End Sub
+
+
+Sub sb1_IFCondition()
+
+'ActiveCell.Select
+If Range("H2") < 45 Then 
+Range("I2") = "Yes"
+
+End Sub
+
+Sub sbForLoop()
+Dim iCntr  As Integer
+For iCntr = 1 To 5
+msgbox iCntr
+Next
+End Sub
+
+So maybe this would work...
+
